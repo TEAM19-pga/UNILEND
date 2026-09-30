@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNILEND - Peer-to-Peer Campus Platform</title>
+    <style>
+        /* Base Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #2b2b2b;
+            transition: background-color 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        /* Fullscreen Background Image for Home Page */
+        .fullscreen-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 1;
+            filter: brightness(0.92);
+        }
+
+        /* Overlay for contrast */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(229, 152, 155, 0.45);
+            backdrop-filter: blur(2px);
+            z-index: 0;
+            transition: opacity 0.4s ease;
+        }
+.page > *:not(.fullscreen-bg):not(.bg-overlay) {
+    position: relative;
+    z-index: 2;
+}
+
+        /* Page Layout Container */
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 950px;
+            padding: 30px 20px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .active-page {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- PAGE 1: HOME PAGE --- */
+        #page1 {
+            background-color: #e5989b; /* Page 1 Background */
+            border-radius: 0;
+            min-height: 100vh;
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: flex-end; /* Sign-in button aligned to the far right */
+            align-items: center;
+            padding: 10px 20px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .signin-btn, .back-btn {
+            background-color: #ffffff;
+            padding: 10px 28px;
+            border-radius: 25px;
+            text-decoration: none;
+            color: #1a1a1a;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            cursor: pointer;
+            border: 1.5px solid #333;
+            transition: all 0.25s ease;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .signin-btn:hover, .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+            background-color: #f8f8f8;
+        }
+
+        /* Title Styling */
+        .title-container {
+            text-align: center;
+            margin: 60px 0 20px 0;
+        }
+
+        .title {
+            font-size: 5rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            color: #2b1810;
+            text-shadow: 2px 2px 8px rgba(255,255,255,0.4);
+            animation: fadeInPop 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            font-style: italic;
+            margin-top: 5px;
+            color: #3d2318;
+            font-weight: 600;
+        }
+
+        @keyframes fadeInPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.7);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Centralized Navigation Cards */
+        .nav-container {
+            display: flex;
+            justify-content: center; /* Centralized on Home page */
+            align-items: flex-start;
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+
+        .nav-card {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(10px);
+            border: 2px solid #333;
+            border-radius: 18px;
+            padding: 20px;
+            width: 280px;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: all 0.35s ease;
+        }
+
+        .nav-card h3 {
+            font-size: 1.35rem;
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        .hover-content {
+            display: none;
+            margin-top: 12px;
+            font-size: 0.92rem;
+            color: #222;
+            line-height: 1.45;
+            text-align: left;
+            border-top: 1px stroke rgba(0, 0, 0, 0.15);
+            padding-top: 10px;
+        }
+
+        .nav-card:hover .hover-content {
+            display: block;
+        }
+
+        .nav-card:hover {
+            background: rgba(255, 255, 255, 0.92);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+
+        /* --- PAGE 2 & 2 CONTINUATION BACKGROUND (#F8C5AD) --- */
+        #page2, #page2-cont {
+            background-color: #F8C5AD;
+            min-height: 100vh;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* --- PAGE 3 & SUB-PAGES BACKGROUND (#DDB398) --- */
+        #page3, #page-sell, #page-rent, #page-request {
+            background-color: #DDB398;
+            min-height: 100vh;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* --- FORMS & INPUTS --- */
+        .form-container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.45);
+            padding: 30px;
+            border-radius: 24px;
+            border: 2px solid #333;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            backdrop-filter: blur(8px);
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #2a1a12;
+            font-weight: 800;
+        }
+
+        .input-box, .select-box, .textarea-box {
+            width: 100%;
+            padding: 13px 22px;
+            border-radius: 30px;
+            border: 2px solid #333;
+            background: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
+            outline: none;
+            text-align: center;
+            color: #111;
+            transition: border-color 0.2s;
+        }
+
+        .input-box:focus, .select-box:focus, .textarea-box:focus {
+            background: #ffffff;
+            border-color: #000;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+        }
+
+        .textarea-box {
+            border-radius: 18px;
+            height: 90px;
+            resize: none;
+            text-align: left;
+        }
+
+        .input-box::placeholder, .textarea-box::placeholder {
+            color: #555;
+        }
+
+        .submit-btn {
+            padding: 13px;
+            border-radius: 30px;
+            border: 2px solid #333;
+            background-color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .submit-btn:hover {
+            background-color: #2b2b2b;
+            color: #ffffff;
+        }
+
+        /* --- PAGE 3: DASHBOARD --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .dash-card {
+            border: 2px solid #333;
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dash-card:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+
+        /* Chat / Request Sections */
+        .chat-section, .request-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chat-box, .request-feed {
+            width: 100%;
+            height: 220px;
+            border: 2px solid #333;
+            border-radius: 18px;
+            background: #ffffff;
+            padding: 15px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            text-align: left;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .chat-box p, .request-feed p {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            background: #f1f1f1;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .chat-input-container {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 25px;
+            border: 2px solid #333;
+            outline: none;
+            font-size: 0.95rem;
+            background: #ffffff;
+        }
+
+        /* Caution Deposit Note */
+        .caution-note {
+            color: #b91c1c;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: -4px;
+            line-height: 1.3;
+        }
+
+        /* Image Preview Box */
+        .preview-box {
+            width: 100%;
+            max-height: 160px;
+            display: none;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-top: 5px;
+            border: 2px solid #333;
+            background: #fff;
+        }
+
+        .top-nav-bar {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive Media Queries */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3.5rem;
+                letter-spacing: 3px;
+            }
+            .tagline {
+                font-size: 1.1rem;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-card {
+                width: 100%;
+                max-width: 340px;
+            }
+            .header {
+                position: relative;
+                top: 0;
+                right: 0;
+                justify-content: center;
+                margin-bottom: 10px;
+            }
+            .title-container {
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== PAGE 1: HOME ==================== -->
+     <div id="page1" class="page active-page"> 
+        <!-- Original Local File Background Image Tag -->
+        <img src="file:///D:/college/img.png" alt="Background" class="fullscreen-bg" onerror="this.src='https://via.placeholder.com/1920x1080?text=Background+Image';">
+        
+        <div class="header">
+            <!-- Sign-in button situated at the top right -->
+            <a href="#" class="signin-btn" onclick="showPage('page2')">Sign in</a>
+        </div>
+        
+        <div class="title-container">
+            <div class="title">UNILEND</div>
+            <div class="tagline">"Less spend, more share"</div>
+        </div>
+
+        <!-- Centralized Navigation Cards -->
+        <div class="nav-container">
+            <div class="nav-card">
+                <h3>Bio</h3>
+                <div class="hover-content">
+                    UNILEND is a peer-to-peer web platform built to make campus life more affordable, collaborative, and connected. By providing a safe, verified marketplace for students to list, lend, or transfer textbooks, lab equipment, and essential tech, Unilend removes the financial strain of academic materials.
+                </div>
+            </div>
+            <div class="nav-card">
+                <h3>Contact Us</h3>
+                <div class="hover-content">
+                    📞 <strong>Phone:</strong> +91 94970 XXXXX<br>
+                    ✉️ <strong>Email:</strong> support@unilend.edu<br>
+                    📍 <strong>Location:</strong> Campus Student Hub, Room 204
+                </div>
+            </div>
+            <div class="nav-card">
+                <h3>Reviews</h3>
+                <div class="hover-content">
+                    ⭐ "Saved over ₹1,500 on engineering textbooks this semester!" - <em>Anand K.</em><br><br>
+                    ⭐ "Rented a scientific calculator for exams effortlessly." - <em>Sneha M.</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 2: SIGN IN DETAILS (#F8C5AD) ==================== -->
+    <div id="page2" class="page">
+        <div class="top-nav-bar">
+            <button type="button" class="back-btn" onclick="showPage('page1')">← Home</button>
+        </div>
+        <h2 class="form-title">Enter Your Details</h2>
+        <form class="form-container" onsubmit="event.preventDefault(); showPage('page2-cont');">
+            <input type="text" class="input-box" placeholder="Name" required>
+            <input type="text" class="input-box" placeholder="Admission No." required>
+            <input type="text" class="input-box" placeholder="Course" required>
+            <input type="text" class="input-box" placeholder="Branch" required>
+            <input type="text" class="input-box" placeholder="Semester" required>
+            <button type="submit" class="submit-btn">Next →</button>
+        </form>
+    </div>
+
+    <!-- ==================== PAGE 2 CONTINUATION: LOCATION & CATEGORY (#F8C5AD) ==================== -->
+    <div id="page2-cont" class="page">
+        <div class="top-nav-bar">
+            <button type="button" class="back-btn" onclick="showPage('page2')">← Back</button>
+        </div>
+        <h2 class="form-title">Select Location & Category</h2>
+        <form class="form-container" onsubmit="event.preventDefault(); showPage('page3');">
+            <!-- Kerala Districts Dropdown -->
+            <select class="select-box" required>
+                <option value="" disabled selected>District</option>
+                <option value="Alappuzha">Alappuzha</option>
+                <option value="Ernakulam">Ernakulam</option>
+                <option value="Idukki">Idukki</option>
+                <option value="Kannur">Kannur</option>
+                <option value="Kasaragod">Kasaragod</option>
+                <option value="Kollam">Kollam</option>
+                <option value="Kottayam">Kottayam</option>
+                <option value="Kozhikode">Kozhikode</option>
+                <option value="Malappuram">Malappuram</option>
+                <option value="Palakkad">Palakkad</option>
+                <option value="Pathanamthitta">Pathanamthitta</option>
+                <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                <option value="Thrissur">Thrissur</option>
+                <option value="Wayanad">Wayanad</option>
+            </select>
+
+            <!-- College Name Input -->
+            <input type="text" class="input-box" placeholder="College Name..." required>
+
+            <!-- Category Dropdown -->
+            <select class="select-box" required>
+                <option value="" disabled selected>Category of educational institutes</option>
+                <option value="Govt">Govt</option>
+                <option value="Pvt">Pvt</option>
+                <option value="Cost Sharing">Cost Sharing</option>
+            </select>
+
+            <button type="submit" class="submit-btn">Complete Registration</button>
+        </form>
+    </div>
+
+    <!-- ==================== PAGE 3: DASHBOARD (#DDB398) ==================== -->
+    <div id="page3" class="page">
+        <div class="top-nav-bar">
+            <h2 style="font-size: 1.8rem; font-weight: 800;">Campus Dashboard</h2>
+            <button type="button" class="back-btn" onclick="showPage('page1')">Log Out</button>
+        </div>
+        <div class="dashboard-grid">
+            <!-- Q&A Section -->
+            <div class="chat-section">
+                <div style="font-size: 1.4rem; font-weight: bold; margin-bottom: 10px; text-align: center;">ASK AWAY 💬</div>
+                <div class="chat-box" id="chatBox">
+                    <p><strong>System:</strong> Welcome to the Q&A community chat!</p>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Type a message..." onkeypress="handleKeyPress(event, sendMessage)">
+                    <button class="submit-btn" style="padding: 8px 18px;" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Options -->
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="dash-card" onclick="showPage('page-sell')">🏷️ SELL</div>
+                <div class="dash-card" onclick="showPage('page-rent')">🔄 RENT</div>
+                <div class="dash-card" onclick="showPage('page-request')">📢 REQUEST</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SUB-PAGE: SELL (#DDB398) ==================== -->
+    <div id="page-sell" class="page">
+        <h2 class="form-title">Sell an Item</h2>
+        <form class="form-container" onsubmit="event.preventDefault(); showNotification('Item Listed for Sale successfully!'); showPage('page3');">
+            <label style="font-weight: 600; text-align: center;">Upload Item Image:</label>
+            <input type="file" id="sellImgInput" accept="image/*" class="input-box" onchange="previewImage(this, 'sellPreview')" required>
+            <img id="sellPreview" class="preview-box" alt="Image Preview">
+            
+            <textarea class="textarea-box" placeholder="Description of the item..." required></textarea>
+            <input type="number" class="input-box" placeholder="Rate / Price (₹)" min="0" required>
+            
+            <button type="submit" class="submit-btn">Post for Sale</button>
+            <button type="button" class="back-btn" onclick="showPage('page3')">Back to Dashboard</button>
+        </form>
+    </div>
+
+    <!-- ==================== SUB-PAGE: RENT (#DDB398) ==================== -->
+    <div id="page-rent" class="page">
+        <h2 class="form-title">Rent an Item</h2>
+        <form class="form-container" onsubmit="event.preventDefault(); showNotification('Item Listed for Rent successfully!'); showPage('page3');">
+            <label style="font-weight: 600; text-align: center;">Upload Item Image:</label>
+            <input type="file" id="rentImgInput" accept="image/*" class="input-box" onchange="previewImage(this, 'rentPreview')" required>
+            <img id="rentPreview" class="preview-box" alt="Image Preview">
+            
+            <textarea class="textarea-box" placeholder="Description of the item..." required></textarea>
+            <input type="number" class="input-box" placeholder="Rent Rate (₹ per day/month)" min="0" required>
+            <input type="number" class="input-box" placeholder="Caution Deposit Amount (₹)" min="0" required>
+            <div class="caution-note">(Payment must be made in advance. If the product is returned without any damage, the caution deposit will be fully refunded)</div>
+
+            <button type="submit" class="submit-btn">Post for Rent</button>
+            <button type="button" class="back-btn" onclick="showPage('page3')">Back to Dashboard</button>
+        </form>
+    </div>
+
+    <!-- ==================== SUB-PAGE: REQUEST (#DDB398) ==================== -->
+    <div id="page-request" class="page">
+        <h2 class="form-title">Public Request Board</h2>
+        <div class="request-section" style="width: 100%; max-width: 520px;">
+            <div class="request-feed" id="requestFeed">
+                <p><strong>John:</strong> Need a scientific calculator (FX-991EX) for 2 days!</p>
+                <p><strong>Meera:</strong> Looking for Semester 4 Mechanical Engineering textbooks.</p>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="requestInput" class="chat-input" placeholder="Post a request visible to everyone..." onkeypress="handleKeyPress(event, postRequest)">
+                <button class="submit-btn" style="padding: 8px 18px;" onclick="postRequest()">Post</button>
+            </div>
+            <button type="button" class="back-btn" style="margin-top: 20px;" onclick="showPage('page3')">Back to Dashboard</button>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        // Page Navigation Controller
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active-page'));
+            
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active-page');
+            }
+
+            // Adjust background overlay visibility
+            const overlay = document.getElementById('bgOverlay');
+            if (pageId === 'page1') {
+                overlay.style.display = 'block';
+            } else {
+                overlay.style.display = 'none';
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Image Preview Handler
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Keypress Listener for Enter Key
+        function handleKeyPress(event, callback) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                callback();
+            }
+        }
+
+        // Q&A Messaging Logic
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const chatBox = document.getElementById('chatBox');
+            
+            if (input.value.trim() !== "") {
+                const newMsg = document.createElement('p');
+                newMsg.innerHTML = `<strong>You:</strong> ${escapeHTML(input.value)}`;
+                chatBox.appendChild(newMsg);
+                input.value = "";
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        // Request Board Post Logic
+        function postRequest() {
+            const input = document.getElementById('requestInput');
+            const requestFeed = document.getElementById('requestFeed');
+            
+            if (input.value.trim() !== "") {
+                const newPost = document.createElement('p');
+                newPost.innerHTML = `<strong>You (Request):</strong> ${escapeHTML(input.value)}`;
+                requestFeed.appendChild(newPost);
+                input.value = "";
+                requestFeed.scrollTop = requestFeed.scrollHeight;
+            }
+        }
+
+        // Helper to escape HTML and prevent basic XSS
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // Custom Inline Toast Message (Replaces alert)
+        function showNotification(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.backgroundColor = '#2b2b2b';
+            toast.style.color = '#ffffff';
+            toast.style.padding = '12px 24px';
+            toast.style.borderRadius = '25px';
+            toast.style.boxShadow = '0 6px 16px rgba(0,0,0,0.2)';
+            toast.style.zIndex = '1000';
+            toast.style.fontSize = '0.95rem';
+            toast.style.fontWeight = '600';
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => toast.remove(), 500);
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
